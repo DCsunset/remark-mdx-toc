@@ -1,10 +1,10 @@
 {
   "name": "remark-mdx-toc",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A remark plugin to generate toc and convert it into MDX export",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc -p ./tsconfig.build.json",
     "test": "node --loader ts-node/esm ./test/test.ts"
   },
   "keywords": [],
