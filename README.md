@@ -1,5 +1,7 @@
 # remark-mdx-toc
 
+[![Version](https://img.shields.io/npm/v/remark-mdx-toc.svg)](https://npmjs.org/package/remark-mdx-toc)
+
 A remark plugin to generate toc and convert it into MDX export
 
 ## Installation
