@@ -19,6 +19,10 @@
     "mdx",
     "toc"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DCsunset/remark-mdx-toc.git"
+  },
   "author": "DCsunset",
   "license": "GPL-3.0",
   "dependencies": {
