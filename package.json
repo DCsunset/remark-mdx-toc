@@ -22,6 +22,7 @@
     "mdast": "^3.0.0",
     "mdast-util-mdx": "^1.1.0",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.2",
+    "unified": "^10.1.1"
   }
 }

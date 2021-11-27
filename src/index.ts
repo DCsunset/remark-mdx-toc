@@ -4,6 +4,7 @@ import { toString } from "mdast-util-to-string";
 import { MDXJSEsm } from "mdast-util-mdx";
 import { name as isIdentifierName } from 'estree-util-is-identifier-name';
 import { valueToEstree } from 'estree-util-value-to-estree';
+import { Plugin } from "unified";
 
 export type TocEntry = {
 	depth: number,
@@ -20,8 +21,9 @@ export interface RemarkMdxTocOptions {
 	name?: string
 };
 
-export const remarkMdxToc = (options: RemarkMdxTocOptions = {}) => (
-	(ast: Root) => {
+export const remarkMdxToc: Plugin<[RemarkMdxTocOptions?]> = (options = {}) => (
+	(ast) => {
+		const mdast = ast as Root;
 		const name = options.name ?? "toc";
 		if (!isIdentifierName(name)) {
 			throw new Error(`Invalid name for an identifier: ${name}`);
@@ -37,7 +39,7 @@ export const remarkMdxToc = (options: RemarkMdxTocOptions = {}) => (
 			children: []
 		});
 
-		visit(ast, "heading", node => {
+		visit(mdast, "heading", node => {
 			const entry = createEntry(node);
 			flatToc.push(entry);
 
@@ -86,6 +88,6 @@ export const remarkMdxToc = (options: RemarkMdxTocOptions = {}) => (
 				}
 			}
 		};
-		ast.children.unshift(tocExport);
+		mdast.children.unshift(tocExport);
 	}
 );
