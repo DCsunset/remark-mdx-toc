@@ -5,21 +5,7 @@ import { MDXJSEsm } from "mdast-util-mdx";
 import { name as isIdentifierName } from 'estree-util-is-identifier-name';
 import { valueToEstree } from 'estree-util-value-to-estree';
 import { Plugin } from "unified";
-
-export type TocEntry = {
-	depth: number,
-	// value of the heading
-	value: string,
-	children: TocEntry[]
-};
-
-export interface RemarkMdxTocOptions {
-	/**
-	 * If specified, export toc using the name.
-	 * Otherwise, use `toc` as the name.
-	 */
-	name?: string
-};
+import { RemarkMdxTocOptions, TocEntry } from "../index";
 
 export const remarkMdxToc: Plugin<[RemarkMdxTocOptions?]> = (options = {}) => (
 	(ast) => {
