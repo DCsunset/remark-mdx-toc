@@ -14,7 +14,11 @@
     "dist/*",
     "index.d.ts"
   ],
-  "keywords": [],
+  "keywords": [
+    "remark",
+    "mdx",
+    "toc"
+  ],
   "author": "DCsunset",
   "license": "GPL-3.0",
   "dependencies": {
