@@ -79,9 +79,24 @@ export default MDXContent;
 ```
 
 
+HTML heading tags (`h1`-`h6`) are supported.
+Custom tags can also be added through options.
+
 ## Options
 
 * `name`: The exported variable name of the toc. By default, it's `toc`.
+* `customTags`: Add custom tags to toc.
+
+`customTags` is an array of `CustomTag` defined below:
+
+```ts
+type CustomTag = {
+  /// regex to match the tag name
+  name: RegExp,
+  /// get depth from name
+  depth: (name: string) => number
+}
+```
 
 
 ## License
