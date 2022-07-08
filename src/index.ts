@@ -1,7 +1,7 @@
 import { Heading, Root } from "mdast";
 import { visit } from "unist-util-visit";
 import { toString } from "mdast-util-to-string";
-import { MdxjsEsm } from "mdast-util-mdx";
+import { MdxjsEsm, MdxJsxFlowElement } from "mdast-util-mdx";
 import { name as isIdentifierName } from 'estree-util-is-identifier-name';
 import { valueToEstree } from 'estree-util-value-to-estree';
 import { Plugin } from "unified";
@@ -34,14 +34,34 @@ export const remarkMdxToc: Plugin<[RemarkMdxTocOptions?]> = (options = {}) => (
 		const toc: TocEntry[] = [];
 		// flat toc (share objects in toc, only for iterating)
 		const flatToc: TocEntry[] = [];
-		const createEntry = (node: Heading): TocEntry => ({
-			depth: node.depth,
-			value: toString(node, { includeImageAlt: false }),
-			children: []
-		});
+		const createEntry = (node: Heading | MdxJsxFlowElement): TocEntry => {
+			if (node.type === "heading") {
+				return {
+					depth: node.depth,
+					value: toString(node, { includeImageAlt: false }),
+					children: []
+				}
+			}
+			else {
+				// parse depth from heading tag
+				const depth = parseInt(node.name!.substring(1));
+				return {
+					depth: depth,
+					value: toString(node, { includeImageAlt: false }),
+					children: []
+				};
+			}
+		};
 
-		visit(mdast, "heading", node => {
-			const entry = createEntry(node);
+		visit(mdast, ["heading", "mdxJsxFlowElement"], node => {
+			if (
+				node.type !== "heading" &&
+				(node.type === "mdxJsxFlowElement" &&
+					!/^h[1-6]$/.test(node.name || ""))
+			) {
+				return;
+			}
+			const entry = createEntry(node as any);
 			flatToc.push(entry);
 
 			// find the last node that is less deep (parant)
