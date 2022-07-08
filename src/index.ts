@@ -19,6 +19,15 @@ export interface RemarkMdxTocOptions {
 	 * Otherwise, use `toc` as the name.
 	 */
 	name?: string
+	/**
+	 * Add custom tag to toc
+	 */
+	customTags?: {
+		/// name of the tag
+		name: RegExp,
+		/// get depth from name
+		depth: (name: string) => number
+	}[],
 };
 
 
@@ -34,34 +43,42 @@ export const remarkMdxToc: Plugin<[RemarkMdxTocOptions?]> = (options = {}) => (
 		const toc: TocEntry[] = [];
 		// flat toc (share objects in toc, only for iterating)
 		const flatToc: TocEntry[] = [];
-		const createEntry = (node: Heading | MdxJsxFlowElement): TocEntry => {
-			if (node.type === "heading") {
-				return {
-					depth: node.depth,
-					value: toString(node, { includeImageAlt: false }),
-					children: []
-				}
-			}
-			else {
-				// parse depth from heading tag
-				const depth = parseInt(node.name!.substring(1));
-				return {
-					depth: depth,
-					value: toString(node, { includeImageAlt: false }),
-					children: []
-				};
-			}
-		};
+		const createEntry = (node: unknown, depth: number): TocEntry => ({
+			depth,
+			value: toString(node, { includeImageAlt: false }),
+			children: []
+		});
 
 		visit(mdast, ["heading", "mdxJsxFlowElement"], node => {
-			if (
-				node.type !== "heading" &&
-				(node.type === "mdxJsxFlowElement" &&
-					!/^h[1-6]$/.test(node.name || ""))
-			) {
+			let depth = 0;
+			if (node.type === "mdxJsxFlowElement") {
+				let valid = false;
+				if (/^h[1-6]$/.test(node.name || "")) {
+					valid = true;
+					depth = parseInt(node.name!.substring(1));
+				}
+				else if (options.customTags) {
+					for (const tag of options.customTags) {
+						if (tag.name.test(node.name || "")) {
+							valid = true;
+							depth = tag.depth(node.name || "");
+							break;
+						}
+					}
+				}
+
+				if (!valid) {
+					return;
+				}
+			}
+			else if (node.type === "heading") {
+				depth = node.depth;
+			}
+			else {
 				return;
 			}
-			const entry = createEntry(node as any);
+
+			const entry = createEntry(node, depth);
 			flatToc.push(entry);
 
 			// find the last node that is less deep (parant)

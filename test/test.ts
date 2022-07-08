@@ -11,7 +11,13 @@ const __dirname = path.dirname(__filename);
 const content = compileSync(fs.readFileSync(path.join(__dirname, "example.mdx")), {
 	jsx: true,
 	remarkPlugins: [
-		[remarkMdxToc, { name: "toc" }]
+		[remarkMdxToc, {
+			name: "toc",
+			customTags: [{
+				name: /^H[1-6]$/,
+				depth: name => parseInt(name.substring(1))
+			}]
+		}]
 	]
 });
 
