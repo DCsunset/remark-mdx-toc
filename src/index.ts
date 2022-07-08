@@ -1,11 +1,26 @@
 import { Heading, Root } from "mdast";
 import { visit } from "unist-util-visit";
 import { toString } from "mdast-util-to-string";
-import { MDXJSEsm } from "mdast-util-mdx";
+import { MdxjsEsm } from "mdast-util-mdx";
 import { name as isIdentifierName } from 'estree-util-is-identifier-name';
 import { valueToEstree } from 'estree-util-value-to-estree';
 import { Plugin } from "unified";
-import { RemarkMdxTocOptions, TocEntry } from "../index";
+
+export type TocEntry = {
+	depth: number,
+	// value of the heading
+	value: string,
+	children: TocEntry[]
+};
+
+export interface RemarkMdxTocOptions {
+	/**
+	 * If specified, export toc using the name.
+	 * Otherwise, use `toc` as the name.
+	 */
+	name?: string
+};
+
 
 export const remarkMdxToc: Plugin<[RemarkMdxTocOptions?]> = (options = {}) => (
 	(ast) => {
@@ -43,7 +58,7 @@ export const remarkMdxToc: Plugin<[RemarkMdxTocOptions?]> = (options = {}) => (
 		});
 
 		// Export in MDX
-		const tocExport: MDXJSEsm = {
+		const tocExport: MdxjsEsm = {
 			type: "mdxjsEsm",
 			value: "",
 			data: {
