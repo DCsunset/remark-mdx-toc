@@ -1,15 +1,17 @@
-import { Root } from "mdast";
+import { Root, Heading } from "mdast";
 import { visit } from "unist-util-visit";
 import { toString } from "mdast-util-to-string";
 import { MdxjsEsm } from "mdast-util-mdx";
 import { name as isIdentifierName } from 'estree-util-is-identifier-name';
 import { valueToEstree } from 'estree-util-value-to-estree';
 import { Plugin } from "unified";
+import { MdxJsxFlowElement, MdxJsxAttribute } from "mdast-util-mdx-jsx";
 
 export type TocEntry = {
 	depth: number,
 	// value of the heading
 	value: string,
+	attributes: {[key: string]: string},
 	children: TocEntry[]
 };
 
@@ -45,11 +47,22 @@ export const remarkMdxToc: Plugin<[RemarkMdxTocOptions?]> = (options = {}) => (
 		const toc: TocEntry[] = [];
 		// flat toc (share objects in toc, only for iterating)
 		const flatToc: TocEntry[] = [];
-		const createEntry = (node: unknown, depth: number): TocEntry => ({
-			depth,
-			value: toString(node, { includeImageAlt: false }),
-			children: []
-		});
+		const createEntry = (node: Heading | MdxJsxFlowElement, depth: number): TocEntry => {
+			let attributes = {};
+			if (node.type === "mdxJsxFlowElement") {
+				 attributes = Object.fromEntries(
+					node.attributes
+						.filter(attribute => attribute.type === 'mdxJsxAttribute' && typeof attribute.value === 'string')
+						.map(attribute => [(attribute as MdxJsxAttribute).name, attribute.value])
+					);
+			}
+			return {
+				depth,
+				value: toString(node, { includeImageAlt: false }),
+				attributes,
+				children: []
+			}
+		};
 
 		visit(mdast, ["heading", "mdxJsxFlowElement"], node => {
 			let depth = 0;
