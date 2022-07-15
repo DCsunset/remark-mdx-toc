@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/DCsunset/remark-mdx-toc/compare/v0.2.0...v0.3.0) (2022-07-15)
+
+
+### Features
+
+* add attributes ([f71877e](https://github.com/DCsunset/remark-mdx-toc/commit/f71877e5112bb4660306aa8f298a1112f04c9ec4))
+
 ## [0.2.0](https://github.com/DCsunset/remark-mdx-toc/compare/v0.1.0...v0.2.0) (2022-07-09)
 
 
