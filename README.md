@@ -46,7 +46,7 @@ Content 1
 
 Sub Content 1
 
-## Title 2
+<h2 id="title-2">Title 2</h2>
 
 Content 2
 ```
@@ -57,17 +57,21 @@ Then the output of the above code is similar to the following:
 export const toc = [{
   "depth": 1,
   "value": "Hello, world",
+  "attributes": {},
   "children": [{
     "depth": 2,
     "value": "Title 1",
+    "attributes": {},
     "children": [{
       "depth": 3,
       "value": "Subtitle 1",
+      "attributes": {},
       "children": []
     }]
   }, {
     "depth": 2,
     "value": "Title 2",
+    "attributes": { "id": "title-2" }
     "children": []
   }]
 }];
