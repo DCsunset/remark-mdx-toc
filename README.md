@@ -36,7 +36,7 @@ console.log(content.value);
 Suppose the `example.mdx` has the following content:
 
 ```md
-# Hello, world
+# Hello, world {#hello-world}
 
 ## Title 1
 
@@ -57,7 +57,9 @@ Then the output of the above code is similar to the following:
 export const toc = [{
   "depth": 1,
   "value": "Hello, world",
-  "attributes": {},
+  "attributes": {
+    "id": "hello-world"
+  },
   "children": [{
     "depth": 2,
     "value": "Title 1",
@@ -82,9 +84,9 @@ function MDXContent(props = {}) {
 export default MDXContent;
 ```
 
-
-HTML heading tags (`h1`-`h6`) are supported.
-Custom tags can also be added through options.
+- HTML heading tags (`h1`-`h6`) are supported.
+- Custom tags can also be added through options.
+- `{#id}` syntax needs [remark-heading-id](https://github.com/imcuttle/remark-heading-id) plugin.
 
 ## Options
 

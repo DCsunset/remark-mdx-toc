@@ -48,13 +48,13 @@ export const remarkMdxToc: Plugin<[RemarkMdxTocOptions?]> = (options = {}) => (
 		// flat toc (share objects in toc, only for iterating)
 		const flatToc: TocEntry[] = [];
 		const createEntry = (node: Heading | MdxJsxFlowElement, depth: number): TocEntry => {
-			let attributes = {};
+			let attributes = (node.data || {}) as TocEntry['attributes'];
 			if (node.type === "mdxJsxFlowElement") {
 				 attributes = Object.fromEntries(
 					node.attributes
 						.filter(attribute => attribute.type === 'mdxJsxAttribute' && typeof attribute.value === 'string')
 						.map(attribute => [(attribute as MdxJsxAttribute).name, attribute.value])
-					);
+					) as TocEntry['attributes'];
 			}
 			return {
 				depth,
